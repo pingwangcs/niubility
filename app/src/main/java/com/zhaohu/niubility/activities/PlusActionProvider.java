@@ -1,4 +1,4 @@
-package com.zhaohu.niubility;
+package com.zhaohu.niubility.activities;
 
 import android.content.Context;
 import android.view.ActionProvider;
@@ -6,6 +6,8 @@ import android.view.MenuItem;
 import android.view.MenuItem.OnMenuItemClickListener;
 import android.view.SubMenu;
 import android.view.View;
+
+import com.zhaohu.niubility.R;
 
 public class PlusActionProvider extends ActionProvider {
 

@@ -12,6 +12,8 @@ import android.widget.FrameLayout;
 import android.widget.TextView;
 import android.widget.FrameLayout.LayoutParams;
 
+import com.zhaohu.niubility.client.ZhaoHuClient;
+
 /**
  * Created by wen on 1/11/15.
  */

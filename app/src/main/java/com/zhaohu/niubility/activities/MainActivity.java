@@ -1,4 +1,4 @@
-package com.zhaohu.niubility;
+package com.zhaohu.niubility.activities;
 
 import android.graphics.Color;
 import android.support.v4.app.Fragment;
@@ -15,6 +15,7 @@ import android.view.ViewConfiguration;
 import android.view.Window;
 
 import com.astuetz.PagerSlidingTabStrip;
+import com.zhaohu.niubility.R;
 import com.zhaohu.niubility.fragments.BookmarksFragment;
 import com.zhaohu.niubility.fragments.HomeFragment;
 import com.zhaohu.niubility.fragments.PhotoWallFragment;
