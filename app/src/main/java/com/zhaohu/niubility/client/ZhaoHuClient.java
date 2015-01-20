@@ -38,7 +38,7 @@ public class ZhaoHuClient {
     private RequestQueue mQueue;
     private Set<HomeResultsListener> mHomeResultsListeners;
     
-    private final static String HOME_URL = "http://www.51zhaohu.com/services/api/rest/json/?method=event.search&keyword=%E5%85%A8%E9%83%A8%E5%85%B4%E8%B6%A3";
+    private final static String HOME_URL = "http://51zhaohu.com/services/api/rest/json/?method=event.search&keyword=All&offset=0";
 
     public ZhaoHuClient(Context context) {
         mContext = context;
@@ -61,7 +61,7 @@ public class ZhaoHuClient {
                 new Response.Listener<JSONObject>() {
                     @Override
                     public void onResponse(JSONObject response) {
-//                        Log.d("TAG", response.toString());
+                        Log.d("TAG", response.toString());
                         try {
                             JSONArray resultsJsonArray = response.getJSONArray("result");
                             for (int i=0; i<resultsJsonArray.length(); i++) {

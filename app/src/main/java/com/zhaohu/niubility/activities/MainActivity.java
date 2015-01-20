@@ -18,6 +18,7 @@ import com.astuetz.PagerSlidingTabStrip;
 import com.zhaohu.niubility.R;
 import com.zhaohu.niubility.fragments.BookmarksFragment;
 import com.zhaohu.niubility.fragments.HomeFragment;
+import com.zhaohu.niubility.fragments.HotEventsFragment;
 import com.zhaohu.niubility.fragments.PhotoWallFragment;
 
 import java.lang.reflect.Field;
@@ -32,14 +33,14 @@ public class MainActivity extends FragmentActivity {
     private HomeFragment homeFragment;
 
     /**
+     * 热点推荐的Fragment
+     */
+    private HotEventsFragment hotEventsFragment;
+
+    /**
      * 照片墙界面的Fragment
      */
     private PhotoWallFragment photoWallFragmentFragment;
-
-    /**
-     * 收藏夹界面的Fragment
-     */
-    private BookmarksFragment bookmarksFragment;
 
     private PagerSlidingTabStrip tabs;
 
@@ -49,7 +50,7 @@ public class MainActivity extends FragmentActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        setOverflowShowingAlways();
+//        setOverflowShowingAlways();
 
         dm = getResources().getDisplayMetrics();
 
@@ -57,6 +58,7 @@ public class MainActivity extends FragmentActivity {
         tabs = (PagerSlidingTabStrip) findViewById(R.id.tabs);
 
         pager.setAdapter(new MyPagerAdapter(getSupportFragmentManager()));
+        pager.setBackgroundColor(Color.WHITE);
         tabs.setViewPager(pager);
 
         setTabsValue();
@@ -70,6 +72,7 @@ public class MainActivity extends FragmentActivity {
         // 设置Tab底部线的高度
         tabs.setUnderlineHeight((int) TypedValue.applyDimension(
                 TypedValue.COMPLEX_UNIT_DIP, 1, dm));
+        tabs.setBackgroundColor(Color.WHITE);
         // 设置Tab Indicator的高度
         tabs.setIndicatorHeight((int) TypedValue.applyDimension(
                 TypedValue.COMPLEX_UNIT_DIP, 4, dm));
@@ -77,9 +80,9 @@ public class MainActivity extends FragmentActivity {
         tabs.setTextSize((int) TypedValue.applyDimension(
                 TypedValue.COMPLEX_UNIT_SP, 16, dm));
         // 设置Tab Indicator的颜色
-        tabs.setIndicatorColor(Color.parseColor("#45c01a"));
+        tabs.setIndicatorColor(Color.parseColor("#fe6817"));
         // 设置选中Tab文字的颜色 (这是我自定义的一个方法)
-        tabs.setSelectedTextColor(Color.parseColor("#45c01a"));
+        tabs.setSelectedTextColor(Color.parseColor("#fe6817"));
         // 取消点击Tab时的背景色
         tabs.setTabBackground(0);
     }
@@ -102,7 +105,7 @@ public class MainActivity extends FragmentActivity {
             super(fm);
         }
 
-        private final String[] titles = { "首页", "照片墙", "收藏夹" };
+        private final String[] titles = { "首页", "推荐", "照片墙" };
 
         @Override
         public CharSequence getPageTitle(int position) {
@@ -123,15 +126,15 @@ public class MainActivity extends FragmentActivity {
                     }
                     return homeFragment;
                 case 1:
+                    if (hotEventsFragment == null) {
+                        hotEventsFragment = new HotEventsFragment();
+                    }
+                    return hotEventsFragment;
+                case 2:
                     if (photoWallFragmentFragment == null) {
                         photoWallFragmentFragment = new PhotoWallFragment();
                     }
                     return photoWallFragmentFragment;
-                case 2:
-                    if (bookmarksFragment == null) {
-                        bookmarksFragment = new BookmarksFragment();
-                    }
-                    return bookmarksFragment;
                 default:
                     return null;
             }
@@ -154,9 +157,9 @@ public class MainActivity extends FragmentActivity {
         int id = item.getItemId();
 
         //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            return true;
-        }
+//        if (id == R.id.action_settings) {
+//            return true;
+//        }
 
         return super.onOptionsItemSelected(item);
     }

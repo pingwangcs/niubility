@@ -27,9 +27,10 @@ public class EventItem {
         try {
             this.guid = object.getString("guid");
             this.title = object.getString("title");
-            this.startTime = object.getString("start_ts");
-            this.endTime = object.getString("end_ts");
-            this.address = object.getString("city") + ", "+object.getString("state");
+            this.startTime = object.getString("start_date");
+            this.endTime = object.getString("end_date");
+            String tempAddress = object.getString("address");
+            this.address = (tempAddress.length() == 0 ? "" : (tempAddress+", ")) + object.getString("city") + ", "+object.getString("state");
             this.imageUrl = object.getString("icon_url");
         } catch (JSONException e) {
             e.printStackTrace();
