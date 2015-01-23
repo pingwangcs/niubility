@@ -9,14 +9,16 @@ import org.json.JSONObject;
 public class EventItem {
     public String guid;
     public String title;
+    public String owner;
     public String startTime;
     public String endTime;
     public String address;
     public String imageUrl;
 
-    public EventItem(String guid, String title, String startTime, String endTime, String address, String imageUrl) {
+    public EventItem(String guid, String title, String owner, String startTime, String endTime, String address, String imageUrl) {
         this.guid = guid;
         this.title = title;
+        this.owner = owner;
         this.startTime = startTime;
         this.endTime = endTime;
         this.address = address;
@@ -27,6 +29,7 @@ public class EventItem {
         try {
             this.guid = object.getString("guid");
             this.title = object.getString("title");
+            this.owner = object.getString("owner_name");
             this.startTime = object.getString("start_date");
             this.endTime = object.getString("end_date");
             String tempAddress = object.getString("address");

@@ -16,6 +16,8 @@ import com.zhaohu.niubility.client.ZhaoHuClient;
 import java.util.Enumeration;
 import java.util.List;
 
+import org.apache.commons.lang.StringEscapeUtils;
+
 /**
  * Created by wen on 1/14/15.
  */
@@ -60,6 +62,7 @@ public class EventResultsListAdapter extends BaseAdapter{
             holder = new EventItemHolder();
             holder.image = (ImageView) row.findViewById(R.id.image);
             holder.title = (TextView)row.findViewById(R.id.title);
+            holder.owner = (TextView) row.findViewById(R.id.owner);
             holder.startTime = (TextView)row.findViewById(R.id.start_time);
             holder.endTime = (TextView)row.findViewById(R.id.end_time);
             holder.address = (TextView)row.findViewById(R.id.address);
@@ -72,10 +75,11 @@ public class EventResultsListAdapter extends BaseAdapter{
         }
 
         EventItem event = events.get(position);
-        holder.title.setText(event.title);
-        holder.startTime.setText(event.startTime);
-        holder.endTime.setText(event.endTime);
-        holder.address.setText(event.address);
+        holder.title.setText(StringEscapeUtils.unescapeHtml(event.title));
+        holder.owner.setText("发起人: "+event.owner);
+        holder.startTime.setText("开始时间: "+event.startTime);
+        holder.endTime.setText("结束时间: "+event.endTime);
+        holder.address.setText("地点: "+event.address);
 
         ZhaoHuClient client = ZhaoHuClient.getInstance(context);
         client.loadImage(event.imageUrl, holder.image);
@@ -87,6 +91,7 @@ public class EventResultsListAdapter extends BaseAdapter{
     static class EventItemHolder {
         ImageView image;
         TextView title;
+        TextView owner;
         TextView startTime;
         TextView endTime;
         TextView address;
