@@ -13,4 +13,7 @@
     <dimen name="result_item_title_padding_bottom">5dp</dimen>
     <dimen name="result_item_other_padding_bottom">2dp</dimen>
 
+    <dimen name="image_thumbnail_size">100dp</dimen>
+    <dimen name="image_thumbnail_spacing">20dp</dimen>
+
 </resources>

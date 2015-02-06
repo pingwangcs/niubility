@@ -8,6 +8,7 @@ import android.support.v4.view.ViewPager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.os.Bundle;
 import android.util.DisplayMetrics;
+import android.util.Log;
 import android.util.TypedValue;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -16,7 +17,6 @@ import android.view.Window;
 
 import com.astuetz.PagerSlidingTabStrip;
 import com.zhaohu.niubility.R;
-import com.zhaohu.niubility.fragments.BookmarksFragment;
 import com.zhaohu.niubility.fragments.HomeFragment;
 import com.zhaohu.niubility.fragments.HotEventsFragment;
 import com.zhaohu.niubility.fragments.PhotoWallFragment;

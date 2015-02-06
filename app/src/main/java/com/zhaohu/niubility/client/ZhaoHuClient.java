@@ -17,6 +17,9 @@ import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.zhaohu.niubility.R;
 import com.zhaohu.niubility.results.EventItem;
+import com.zhaohu.niubility.results.HotEventListItem;
+import com.zhaohu.niubility.results.HotEventResultsListAdapter;
+import com.zhaohu.niubility.results.PhotoItem;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -37,13 +40,19 @@ public class ZhaoHuClient {
     private Context mContext;
     private RequestQueue mQueue;
     private Set<HomeResultsListener> mHomeResultsListeners;
-    
+    private Set<HotResultsListener> mHotResultsListeners;
+    private Set<PhotoWallListener> mPhotoWallListeners;
+
     private final static String HOME_URL = "http://51zhaohu.com/services/api/rest/json/?method=event.search&keyword=All&offset=0";
+    private final static String HOT_URL = "http://51zhaohu.com/services/api/rest/json/?method=event.search&featured=y&offset=0";
+    private final static String PHOTO_WALL_URL = "http://51zhaohu.com/services/api/rest/json/?method=album.list&offset=0";
 
     public ZhaoHuClient(Context context) {
         mContext = context;
         mQueue = Volley.newRequestQueue(mContext);
         mHomeResultsListeners = new HashSet<HomeResultsListener>();
+        mHotResultsListeners = new HashSet<HotResultsListener>();
+        mPhotoWallListeners = new HashSet<PhotoWallListener>();
     }
 
     public static ZhaoHuClient getInstance(Context context) {
@@ -63,12 +72,12 @@ public class ZhaoHuClient {
                     public void onResponse(JSONObject response) {
                         Log.d("TAG", response.toString());
                         try {
-                            JSONArray resultsJsonArray = response.getJSONArray("result");
-                            for (int i=0; i<resultsJsonArray.length(); i++) {
-                                JSONObject object = (JSONObject) resultsJsonArray.get(i);
-                                String imageUrl = object.getString("icon_url");
+                            JSONObject result = response.getJSONObject("result");
+                            JSONArray resultsEntitiesJsonArray = result.getJSONArray("entities");
+                            for (int i=0; i<resultsEntitiesJsonArray.length(); i++) {
+                                JSONObject object = (JSONObject) resultsEntitiesJsonArray.get(i);
                                 String title = object.getString("title");
-                                Log.d("TAG", title);
+//                                Log.d("TAG", title);
 
                                 EventItem eventItem = new EventItem(object);
                                 results.add(eventItem);
@@ -91,14 +100,103 @@ public class ZhaoHuClient {
 
         mQueue.add(jsonObjectRequest);
     }
-    
-    
-    public void addHomeResultsListener(HomeResultsListener listener) {
-        mHomeResultsListeners.add(listener);   
+
+    public void fetchHotResults() {
+
+        final ArrayList<HotEventListItem> results = new ArrayList<HotEventListItem>();
+
+        JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(HOT_URL, null,
+                new Response.Listener<JSONObject>() {
+                    @Override
+                    public void onResponse(JSONObject response) {
+                        Log.d("TAG", response.toString());
+                        try {
+                            JSONObject result = response.getJSONObject("result");
+                            JSONArray resultsEntitiesJsonArray = result.getJSONArray("entities");
+                            for (int i=0; i<resultsEntitiesJsonArray.length(); i++) {
+                                JSONObject object = (JSONObject) resultsEntitiesJsonArray.get(i);
+                                String title = object.getString("title");
+//                                Log.d("TAG", title);
+
+                                HotEventListItem eventItem = new HotEventListItem(object);
+                                results.add(eventItem);
+                            }
+
+                            for(HotResultsListener listener: mHotResultsListeners) {
+                                listener.update(results);
+                            }
+
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                Log.e("TAG", error.getMessage(), error);
+            }
+        });
+
+        mQueue.add(jsonObjectRequest);
+    }
+
+    public void fetchPhotoWall() {
+
+        final ArrayList<PhotoItem> results = new ArrayList<PhotoItem>();
+
+        JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(PHOTO_WALL_URL, null,
+                new Response.Listener<JSONObject>() {
+                    @Override
+                    public void onResponse(JSONObject response) {
+                        Log.d("TAG", response.toString());
+                        try {
+                            JSONObject result = response.getJSONObject("result");
+                            JSONArray resultsEntitiesJsonArray = result.getJSONArray("entities");
+                            for (int i=0; i<resultsEntitiesJsonArray.length(); i++) {
+                                JSONObject object = (JSONObject) resultsEntitiesJsonArray.get(i);
+                                String title = object.getString("title");
+                                Log.d("TAG", title);
+
+                                PhotoItem photoItem = new PhotoItem(object);
+                                results.add(photoItem);
+                            }
+
+                            for(PhotoWallListener listener: mPhotoWallListeners) {
+                                listener.update(results);
+                            }
+
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                Log.e("TAG", error.getMessage(), error);
+            }
+        });
+
+        mQueue.add(jsonObjectRequest);
     }
     
+    public void addHomeResultsListener(HomeResultsListener listener) {
+        mHomeResultsListeners.add(listener);
+    }
+
     public void removeHomeResultsListener(HomeResultsListener listener) {
         mHomeResultsListeners.remove(listener);
+    }
+
+    public void addHotResultsListener(HotResultsListener listener) {
+        mHotResultsListeners.add(listener);
+    }
+
+    public void removeHotResultsListener(HotResultsListener listener) {
+        mHotResultsListeners.remove(listener);
+    }
+
+    public void addPhotoWallListener(PhotoWallListener listener) {
+        mPhotoWallListeners.add(listener);
     }
 
     public void loadImage(String imageUrl, ImageView imageView) {
@@ -106,8 +204,9 @@ public class ZhaoHuClient {
         ImageLoader imageLoader = new ImageLoader(mQueue, new BitmapCache());
 
         ImageLoader.ImageListener listener = ImageLoader.getImageListener(imageView,
-                R.drawable.logo, R.drawable.ic_launcher);
+                R.drawable.loading, R.drawable.pic_load_failed);
 
         imageLoader.get(imageUrl, listener);
+//        imageLoader.get("4444", listener);
     }
 }

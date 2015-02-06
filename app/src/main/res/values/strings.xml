@@ -15,4 +15,5 @@
     <string name="plus_scan">扫一扫</string>
     <string name="plus_take_photo">拍照分享</string>
 
+    <string name="nav_back">返回</string>
 </resources>

@@ -6,7 +6,7 @@ import org.json.JSONObject;
 /**
  * Created by wen on 1/14/15.
  */
-public class EventItem {
+public class HotEventListItem {
     public String guid;
     public String title;
     public String owner;
@@ -16,7 +16,7 @@ public class EventItem {
     public String imageUrl;
     public String webViewUrl;
 
-    public EventItem(JSONObject object) {
+    public HotEventListItem (JSONObject object) {
         try {
             this.guid = object.getString("guid");
             this.title = object.getString("title");

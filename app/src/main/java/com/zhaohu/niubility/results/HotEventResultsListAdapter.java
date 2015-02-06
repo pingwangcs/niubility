@@ -5,6 +5,7 @@ import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -20,12 +21,12 @@ import org.apache.commons.lang.StringEscapeUtils;
 /**
  * Created by wen on 1/14/15.
  */
-public class EventResultsListAdapter extends BaseAdapter{
+public class HotEventResultsListAdapter extends BaseAdapter{
     Context context;
     LayoutInflater mInflater;
-    List<EventItem> events;
+    List<HotEventListItem> events;
 
-    public EventResultsListAdapter(Context context) {
+    public HotEventResultsListAdapter(Context context) {
         this.context = context;
         mInflater = ((Activity)context).getLayoutInflater();
     }
@@ -36,7 +37,7 @@ public class EventResultsListAdapter extends BaseAdapter{
     }
 
     @Override
-    public EventItem getItem(int position) {
+    public HotEventListItem getItem(int position) {
         return events.get(position);
     }
 
@@ -45,20 +46,20 @@ public class EventResultsListAdapter extends BaseAdapter{
         return events.size();
     }
 
-    public void setData(List<EventItem> events) {
+    public void setData(List<HotEventListItem> events) {
         this.events = events;
     }
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
         View row = convertView;
-        EventItemHolder holder = null;
+        HotEventItemHolder holder = null;
 
         if(row == null)
         {
-            row = mInflater.inflate(R.layout.results_item_layout, parent, false);
+            row = mInflater.inflate(R.layout.hot_item_layout, parent, false);
 
-            holder = new EventItemHolder();
+            holder = new HotEventItemHolder();
             holder.image = (ImageView) row.findViewById(R.id.image);
             holder.title = (TextView)row.findViewById(R.id.title);
             holder.owner = (TextView) row.findViewById(R.id.owner);
@@ -70,10 +71,10 @@ public class EventResultsListAdapter extends BaseAdapter{
         }
         else
         {
-            holder = (EventItemHolder)row.getTag();
+            holder = (HotEventItemHolder)row.getTag();
         }
 
-        EventItem event = events.get(position);
+        HotEventListItem event = events.get(position);
         holder.title.setText(StringEscapeUtils.unescapeHtml(event.title));
         holder.owner.setText("发起人: "+event.owner);
         holder.startTime.setText("开始时间: "+event.startTime);
@@ -87,7 +88,7 @@ public class EventResultsListAdapter extends BaseAdapter{
     }
 
 
-    static class EventItemHolder {
+    static class HotEventItemHolder {
         ImageView image;
         TextView title;
         TextView owner;

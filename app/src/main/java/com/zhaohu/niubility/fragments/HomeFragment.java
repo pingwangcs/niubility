@@ -1,20 +1,25 @@
 package com.zhaohu.niubility.fragments;
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.util.DisplayMetrics;
 import android.util.TypedValue;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.FrameLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.FrameLayout.LayoutParams;
 
 import com.zhaohu.niubility.R;
+import com.zhaohu.niubility.activities.WebViewActivity;
 import com.zhaohu.niubility.client.HomeResultsListener;
 import com.zhaohu.niubility.client.ZhaoHuClient;
 import com.zhaohu.niubility.results.EventItem;
@@ -64,9 +69,20 @@ public class HomeFragment extends Fragment{
             }
         });
 
-
-
         client.fetchHomeResults();
+
+        resultsListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                String url = adapter.getItem(position).webViewUrl;
+
+                Intent intent = new Intent(mContext, WebViewActivity.class);
+                intent.putExtra("URL", url);
+                startActivity(intent);
+
+
+            }
+        });
 
         return view;
     }

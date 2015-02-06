@@ -6,6 +6,7 @@
         <item name="android:actionBarItemBackground">@drawable/actionbar_bg_selector</item>
         <item name="android:itemTextAppearance">@style/WeChatActionBarOverflow</item>
         <item name="android:actionOverflowButtonStyle">@style/WeChatActionButtonOverflow</item>
+        <item name="android:windowAnimationStyle">@style/activityAnimation</item>
     </style>
 
     <style name="WeChatActionBar" parent="@android:style/Widget.Holo.ActionBar">
@@ -24,6 +25,29 @@
 
     <style name="WeChatActionButtonOverflow" parent="android:style/Widget.Holo.ActionButton.Overflow">
         <item name="android:src">@drawable/actionbar_more_icon</item>
+    </style>
+
+
+
+    <style name="AppWebTheme" parent="android:Theme.Holo.Light">
+        <item name="android:actionBarStyle">@style/BlankNavActionBar</item>
+        <item name="android:windowAnimationStyle">@style/activityAnimation</item>
+    </style>
+    <style name="BlankNavActionBar" parent="@android:style/Widget.Holo.ActionBar">
+        <item name="android:background">@android:color/white</item>
+        <item name="android:titleTextStyle">@style/NavActionBarTitleText</item>
+    </style>
+    <style name="NavActionBarTitleText" parent="@android:style/TextAppearance.Holo.Widget.ActionBar.Title">
+        <item name="android:textColor">@color/actionbar_color</item>
+        <item name="android:textSize">17sp</item>
+    </style>
+
+
+    <style name="activityAnimation" parent="@android:style/Animation">
+        <item name="android:activityOpenEnterAnimation">@anim/slide_right_in</item>
+        <item name="android:activityOpenExitAnimation">@anim/slide_left_out</item>
+        <item name="android:activityCloseEnterAnimation">@anim/slide_left_in</item>
+        <item name="android:activityCloseExitAnimation">@anim/slide_right_out</item>
     </style>
 
 </resources>

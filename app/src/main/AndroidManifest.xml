@@ -1,7 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.zhaohu.niubility" >
+
     <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+
     <application
         android:allowBackup="true"
         android:icon="@drawable/app_icon"
@@ -15,6 +18,20 @@
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+
+        <activity
+            android:name=".activities.WebViewActivity"
+            android:logo="@android:color/transparent"
+            android:label="@string/nav_back"
+            android:theme="@style/AppWebTheme"
+            android:parentActivityName="com.zhaohu.niubility.activities.MainActivity"
+            >
+            <intent-filter>
+                <action android:name="android.intent.action.WEB" />
+
+                <category android:name="android.intent.category.WEBVIEW" />
             </intent-filter>
         </activity>
     </application>
