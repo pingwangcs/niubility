@@ -9,8 +9,11 @@ import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.android.volley.toolbox.NetworkImageView;
 import com.zhaohu.niubility.R;
 import com.zhaohu.niubility.client.ZhaoHuClient;
+import com.zhaohu.niubility.fragments.EventsFragment;
+import com.zhaohu.niubility.fragments.HotEventsFragment;
 
 import java.util.Enumeration;
 import java.util.List;
@@ -25,8 +28,10 @@ public class EventResultsListAdapter extends BaseAdapter{
     LayoutInflater mInflater;
     List<EventItem> events;
 
-    public EventResultsListAdapter(Context context) {
+    EventsFragment mType;
+    public EventResultsListAdapter(Context context, EventsFragment type) {
         this.context = context;
+        this.mType = type;
         mInflater = ((Activity)context).getLayoutInflater();
     }
 
@@ -56,10 +61,14 @@ public class EventResultsListAdapter extends BaseAdapter{
 
         if(row == null)
         {
-            row = mInflater.inflate(R.layout.results_item_layout, parent, false);
+            if(mType == EventsFragment.HOME_FRAGMENT) {
+                row = mInflater.inflate(R.layout.results_item_layout, parent, false);
+            } else {
+                row = mInflater.inflate(R.layout.hot_item_layout, parent, false);
+            }
 
             holder = new EventItemHolder();
-            holder.image = (ImageView) row.findViewById(R.id.image);
+            holder.image = (NetworkImageView) row.findViewById(R.id.image);
             holder.title = (TextView)row.findViewById(R.id.title);
             holder.owner = (TextView) row.findViewById(R.id.owner);
             holder.startTime = (TextView)row.findViewById(R.id.start_time);
@@ -81,14 +90,16 @@ public class EventResultsListAdapter extends BaseAdapter{
         holder.address.setText("地点: "+event.address);
 
         ZhaoHuClient client = ZhaoHuClient.getInstance(context);
-        client.loadImage(event.imageUrl, holder.image);
+        client.setNetworkImage(event.imageUrl, holder.image);
+
+
 
         return row;
     }
 
 
     static class EventItemHolder {
-        ImageView image;
+        NetworkImageView image;
         TextView title;
         TextView owner;
         TextView startTime;

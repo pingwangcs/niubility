@@ -3,25 +3,15 @@ package com.zhaohu.niubility.fragments;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.util.DisplayMetrics;
-import android.util.TypedValue;
-import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
-import android.widget.FrameLayout;
 import android.widget.GridView;
-import android.widget.ListView;
-import android.widget.TextView;
-import android.widget.FrameLayout.LayoutParams;
 
 import com.zhaohu.niubility.R;
-import com.zhaohu.niubility.client.HotResultsListener;
 import com.zhaohu.niubility.client.PhotoWallListener;
 import com.zhaohu.niubility.client.ZhaoHuClient;
-import com.zhaohu.niubility.results.HotEventListItem;
-import com.zhaohu.niubility.results.HotEventResultsListAdapter;
 import com.zhaohu.niubility.results.PhotoItem;
 import com.zhaohu.niubility.results.PhotoWallAdapter;
 

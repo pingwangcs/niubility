@@ -56,7 +56,7 @@ public class HomeFragment extends Fragment{
 
         final ListView resultsListView = (ListView) view.findViewById(R.id.results_list);
 
-        final EventResultsListAdapter adapter = new EventResultsListAdapter(mContext);
+        final EventResultsListAdapter adapter = new EventResultsListAdapter(mContext, EventsFragment.HOME_FRAGMENT);
 
         ZhaoHuClient client = ZhaoHuClient.getInstance(mContext);
 

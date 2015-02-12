@@ -1,24 +1,18 @@
 package com.zhaohu.niubility.client;
 
 import android.content.Context;
-import android.graphics.Bitmap;
-import android.util.EventLogTags;
 import android.util.Log;
 import android.widget.ImageView;
-import android.widget.Toast;
 
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.ImageLoader;
-import com.android.volley.toolbox.JsonArrayRequest;
 import com.android.volley.toolbox.JsonObjectRequest;
-import com.android.volley.toolbox.StringRequest;
+import com.android.volley.toolbox.NetworkImageView;
 import com.android.volley.toolbox.Volley;
 import com.zhaohu.niubility.R;
 import com.zhaohu.niubility.results.EventItem;
-import com.zhaohu.niubility.results.HotEventListItem;
-import com.zhaohu.niubility.results.HotEventResultsListAdapter;
 import com.zhaohu.niubility.results.PhotoItem;
 
 import org.json.JSONArray;
@@ -27,7 +21,6 @@ import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 
 /**
@@ -103,7 +96,7 @@ public class ZhaoHuClient {
 
     public void fetchHotResults() {
 
-        final ArrayList<HotEventListItem> results = new ArrayList<HotEventListItem>();
+        final ArrayList<EventItem> results = new ArrayList<EventItem>();
 
         JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(HOT_URL, null,
                 new Response.Listener<JSONObject>() {
@@ -118,7 +111,7 @@ public class ZhaoHuClient {
                                 String title = object.getString("title");
 //                                Log.d("TAG", title);
 
-                                HotEventListItem eventItem = new HotEventListItem(object);
+                                EventItem eventItem = new EventItem(object);
                                 results.add(eventItem);
                             }
 
@@ -183,30 +176,19 @@ public class ZhaoHuClient {
         mHomeResultsListeners.add(listener);
     }
 
-    public void removeHomeResultsListener(HomeResultsListener listener) {
-        mHomeResultsListeners.remove(listener);
-    }
-
     public void addHotResultsListener(HotResultsListener listener) {
         mHotResultsListeners.add(listener);
-    }
-
-    public void removeHotResultsListener(HotResultsListener listener) {
-        mHotResultsListeners.remove(listener);
     }
 
     public void addPhotoWallListener(PhotoWallListener listener) {
         mPhotoWallListeners.add(listener);
     }
 
-    public void loadImage(String imageUrl, ImageView imageView) {
+    public void setNetworkImage(String imageUrl, NetworkImageView imageView) {
+        ImageLoader imageLoader = new ImageLoader(mQueue, BitmapCache.getInstance(mContext));
 
-        ImageLoader imageLoader = new ImageLoader(mQueue, new BitmapCache());
-
-        ImageLoader.ImageListener listener = ImageLoader.getImageListener(imageView,
-                R.drawable.loading, R.drawable.pic_load_failed);
-
-        imageLoader.get(imageUrl, listener);
-//        imageLoader.get("4444", listener);
+        imageView.setDefaultImageResId(R.drawable.loading);
+        imageView.setErrorImageResId(R.drawable.pic_load_failed);
+        imageView.setImageUrl(imageUrl, imageLoader);
     }
 }

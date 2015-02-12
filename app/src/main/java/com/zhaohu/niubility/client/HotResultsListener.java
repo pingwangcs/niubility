@@ -1,6 +1,6 @@
 package com.zhaohu.niubility.client;
 
-import com.zhaohu.niubility.results.HotEventListItem;
+import com.zhaohu.niubility.results.EventItem;
 
 import java.util.List;
 
@@ -9,6 +9,6 @@ import java.util.List;
  */
 public interface HotResultsListener {
 
-    public void update(List<HotEventListItem> results);
+    public void update(List<EventItem> results);
 
 }

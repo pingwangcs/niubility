@@ -4,27 +4,18 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.util.DisplayMetrics;
-import android.util.TypedValue;
-import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
-import android.widget.FrameLayout;
 import android.widget.ListView;
-import android.widget.TextView;
-import android.widget.FrameLayout.LayoutParams;
 
 import com.zhaohu.niubility.R;
 import com.zhaohu.niubility.activities.WebViewActivity;
-import com.zhaohu.niubility.client.HomeResultsListener;
 import com.zhaohu.niubility.client.HotResultsListener;
 import com.zhaohu.niubility.client.ZhaoHuClient;
 import com.zhaohu.niubility.results.EventItem;
 import com.zhaohu.niubility.results.EventResultsListAdapter;
-import com.zhaohu.niubility.results.HotEventListItem;
-import com.zhaohu.niubility.results.HotEventResultsListAdapter;
 
 import java.util.List;
 
@@ -43,13 +34,13 @@ public class HotEventsFragment extends Fragment{
 
         final ListView resultsListView = (ListView) view.findViewById(R.id.results_list);
 
-        final HotEventResultsListAdapter adapter = new HotEventResultsListAdapter(mContext);
+        final EventResultsListAdapter adapter = new EventResultsListAdapter(mContext, EventsFragment.HOT_EVENTS_FRAGMENT);
 
         ZhaoHuClient client = ZhaoHuClient.getInstance(mContext);
 
         client.addHotResultsListener(new HotResultsListener() {
             @Override
-            public void update(List<HotEventListItem> results) {
+            public void update(List<EventItem> results) {
                 adapter.setData(results);
                 resultsListView.setAdapter(adapter);
                 adapter.notifyDataSetChanged();
