@@ -7,21 +7,20 @@ import org.json.JSONObject;
  * Created by wen on 1/30/15.
  */
 public class PhotoItem {
-    private String title;
-    private String jsonUrl;
-    private String coverUrl;
+    public String title;
+    public String infoUrl;
+    public String imageUrl;
+    public String imageDetailUrl;
 
     public PhotoItem(JSONObject object) {
         try {
             this.title = object.getString("title");
-            this.jsonUrl = object.getString("url");
-            this.coverUrl = object.getString("cover");
+            this.infoUrl = object.getString("url");
+            this.imageUrl = object.getString("thumbnail_small");
+            this.imageDetailUrl = object.getString("thumbnail_large");
+
         } catch (JSONException e) {
             e.printStackTrace();
         }
-    }
-
-    public String getCoverUrl() {
-        return coverUrl;
     }
 }

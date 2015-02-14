@@ -26,14 +26,34 @@
             android:logo="@android:color/transparent"
             android:label="@string/nav_back"
             android:theme="@style/AppWebTheme"
-            android:parentActivityName="com.zhaohu.niubility.activities.MainActivity"
-            >
+            android:parentActivityName="com.zhaohu.niubility.activities.MainActivity" >
             <intent-filter>
                 <action android:name="android.intent.action.WEB" />
 
                 <category android:name="android.intent.category.WEBVIEW" />
             </intent-filter>
         </activity>
+
+        <activity
+            android:name=".activities.PhotoWallActivity"
+            android:logo="@android:color/transparent"
+            android:label="@string/homepage"
+            android:parentActivityName="com.zhaohu.niubility.activities.MainActivity">
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+                <category android:name="android.intent.category.APP_GALLERY" />
+            </intent-filter>
+        </activity>
+
+        <activity
+            android:name=".activities.ImageDetailsActivity"
+            android:launchMode="singleTop">
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+                <category android:name="android.intent.category.APP_GALLERY" />
+            </intent-filter>
+        </activity>
+
     </application>
 
 </manifest>

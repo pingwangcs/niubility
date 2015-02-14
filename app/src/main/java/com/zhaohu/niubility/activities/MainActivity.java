@@ -17,9 +17,9 @@ import android.view.Window;
 
 import com.astuetz.PagerSlidingTabStrip;
 import com.zhaohu.niubility.R;
+import com.zhaohu.niubility.fragments.AlbumFragment;
 import com.zhaohu.niubility.fragments.HomeFragment;
 import com.zhaohu.niubility.fragments.HotEventsFragment;
-import com.zhaohu.niubility.fragments.PhotoWallFragment;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
@@ -40,7 +40,7 @@ public class MainActivity extends FragmentActivity {
     /**
      * 照片墙界面的Fragment
      */
-    private PhotoWallFragment photoWallFragmentFragment;
+    private AlbumFragment albumFragment;
 
     private PagerSlidingTabStrip tabs;
 
@@ -131,10 +131,10 @@ public class MainActivity extends FragmentActivity {
                     }
                     return hotEventsFragment;
                 case 2:
-                    if (photoWallFragmentFragment == null) {
-                        photoWallFragmentFragment = new PhotoWallFragment();
+                    if (albumFragment == null) {
+                        albumFragment = new AlbumFragment();
                     }
-                    return photoWallFragmentFragment;
+                    return albumFragment;
                 default:
                     return null;
             }
