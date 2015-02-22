@@ -4,26 +4,22 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentTransaction;
-import android.util.DisplayMetrics;
-import android.util.TypedValue;
-import android.view.Gravity;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AbsListView;
 import android.widget.AdapterView;
-import android.widget.FrameLayout;
 import android.widget.ListView;
-import android.widget.TextView;
-import android.widget.FrameLayout.LayoutParams;
 
+import com.android.volley.toolbox.JsonObjectRequest;
 import com.zhaohu.niubility.R;
 import com.zhaohu.niubility.activities.WebViewActivity;
-import com.zhaohu.niubility.client.HomeResultsListener;
-import com.zhaohu.niubility.client.ZhaoHuClient;
-import com.zhaohu.niubility.results.EventItem;
-import com.zhaohu.niubility.results.EventResultsListAdapter;
+import com.zhaohu.niubility.client.clients.ZhaoHuClient;
+import com.zhaohu.niubility.client.listeners.ResultsListener;
+import com.zhaohu.niubility.results.items.EventItem;
+import com.zhaohu.niubility.results.adapters.EventResultsListAdapter;
+import com.zhaohu.niubility.types.EventsType;
 
 import java.util.List;
 
@@ -32,58 +28,80 @@ import java.util.List;
  */
 public class HomeFragment extends Fragment{
     private Context mContext;
+    private ListView mResultsListView;
+    private EventResultsListAdapter mAdapter;
 
+    private int visibleLastIndex = 0;   //最后的可视项索引
+    private int visibleItemCount;       // 当前窗口可见项总数
+
+    private View mLoadingSpinner;
+    private View mLoadMoreSpinner;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
 
         mContext = container.getContext();
-        View view = inflater.inflate(R.layout.home_page_layout, container, false);
 
+        View homeView = inflater.inflate(R.layout.home_page_layout, container, false);
+        mLoadingSpinner = homeView.findViewById(R.id.spinner);
+        mLoadingSpinner.setVisibility(View.VISIBLE);
 
-//        LayoutParams params = new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT);
-//        DisplayMetrics dm = getResources().getDisplayMetrics();
-//        final int margin = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 8, dm);
-//        TextView textView = (TextView) view.findViewById(R.id.title);
-//        params.setMargins(margin, margin, margin, margin);
-//        textView.setLayoutParams(params);
-//        textView.setLayoutParams(params);
-//        textView.setGravity(Gravity.CENTER);
-//        textView.setText("首页界面");
-//        textView.setTextSize((int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_SP, 12, dm));
+        View footerView = inflater.inflate(R.layout.spinner_layout, null);
+        mLoadMoreSpinner = footerView.findViewById(R.id.spinner);
+        mLoadMoreSpinner.setVisibility(View.VISIBLE);
 
+        mResultsListView = (ListView) homeView.findViewById(R.id.results_list);
+        mAdapter = new EventResultsListAdapter(mContext, EventsType.HOME_EVENTS);
 
-        final ListView resultsListView = (ListView) view.findViewById(R.id.results_list);
-
-        final EventResultsListAdapter adapter = new EventResultsListAdapter(mContext, EventsFragment.HOME_FRAGMENT);
+        mResultsListView.setOnItemClickListener(new HomeResultsOnItemClickListener());
+        mResultsListView.setOnScrollListener(new HomeResultsOnScrollListener());
+        mResultsListView.addFooterView(footerView);
 
         ZhaoHuClient client = ZhaoHuClient.getInstance(mContext);
+        client.fetchResult(EventsType.HOME_EVENTS, new HomeResultsResponseListener());
 
-        client.addHomeResultsListener(new HomeResultsListener() {
-            @Override
-            public void update(List<EventItem> results) {
-                adapter.setData(results);
-                resultsListView.setAdapter(adapter);
-                adapter.notifyDataSetChanged();
+        return homeView;
+    }
+
+    private class HomeResultsResponseListener implements ResultsListener<EventItem> {
+        @Override
+        public void update(List<EventItem> results) {
+            mAdapter.setData(results);
+            mResultsListView.setAdapter(mAdapter);
+            mAdapter.notifyDataSetChanged();
+            mLoadingSpinner.setVisibility(View.GONE);
+        }
+    }
+
+    private class HomeResultsOnItemClickListener implements AdapterView.OnItemClickListener {
+        @Override
+        public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+            String url = mAdapter.getItem(position).webViewUrl;
+
+            Intent intent = new Intent(mContext, WebViewActivity.class);
+            intent.putExtra("URL", url);
+            startActivity(intent);
+        }
+    }
+
+    private class HomeResultsOnScrollListener implements AbsListView.OnScrollListener {
+        @Override
+        public void onScroll(AbsListView view, int firstVisibleItem, int visibleCount, int totalItemCount) {
+            visibleItemCount = visibleCount;
+            visibleLastIndex = firstVisibleItem + visibleItemCount - 1;
+            Log.w("wztw", "onScroll: visibleItemCount:"+visibleItemCount+" visibleLastIndex:"+visibleLastIndex);
+        }
+
+        @Override
+        public void onScrollStateChanged(AbsListView view, int scrollState) {
+            int itemsLastIndex = mAdapter.getCount() - 1;    //数据集最后一项的索引
+            int lastIndex = itemsLastIndex + 1;             //加上底部的loadMoreView项
+            Log.w("wztw", "onScrollStateChanged:lastIndex:"+lastIndex);
+            if (scrollState == AbsListView.OnScrollListener.SCROLL_STATE_IDLE && visibleLastIndex == lastIndex) {
+                //如果是自动加载,可以在这里放置异步加载数据的代码
+                Log.w("wztw", "should update listview here");
             }
-        });
-
-        client.fetchHomeResults();
-
-        resultsListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                String url = adapter.getItem(position).webViewUrl;
-
-                Intent intent = new Intent(mContext, WebViewActivity.class);
-                intent.putExtra("URL", url);
-                startActivity(intent);
-
-
-            }
-        });
-
-        return view;
+        }
     }
 }

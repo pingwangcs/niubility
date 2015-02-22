@@ -1,4 +1,4 @@
-package com.zhaohu.niubility.results;
+package com.zhaohu.niubility.results.adapters;
 
 /**
  * Created by wen on 2/11/15.
@@ -6,20 +6,16 @@ package com.zhaohu.niubility.results;
 
 import android.app.Activity;
 import android.content.Context;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
-import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.android.volley.toolbox.NetworkImageView;
 import com.zhaohu.niubility.R;
-import com.zhaohu.niubility.client.ZhaoHuClient;
-
-import org.apache.commons.lang.StringEscapeUtils;
+import com.zhaohu.niubility.client.clients.ZhaoHuClient;
+import com.zhaohu.niubility.results.items.AlbumItem;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -78,8 +74,8 @@ public class AlbumAdapter extends BaseAdapter {
             row = mInflater.inflate(R.layout.album_item_layout, parent, false);
 
             holder = new AlbumItemHolder();
-//            holder.image = (NetworkImageView) row.findViewById(R.id.image);
-            holder.image = (ImageView) row.findViewById(R.id.image);
+            holder.image = (NetworkImageView) row.findViewById(R.id.image);
+//            holder.image = (ImageView) row.findViewById(R.id.image);
             holder.title = (TextView)row.findViewById(R.id.title);
             holder.time = (TextView) row.findViewById(R.id.time);
 //            holder.startTime = (TextView)row.findViewById(R.id.start_time);
@@ -97,18 +93,18 @@ public class AlbumAdapter extends BaseAdapter {
         holder.title.setText(album.title);
 //        holder.title.setText(StringEscapeUtils.unescapeHtml(event.title));
 
-//        ZhaoHuClient client = ZhaoHuClient.getInstance(context);
-//        client.setNetworkImage(album.cover_url, holder.image);
+        ZhaoHuClient client = ZhaoHuClient.getInstance(context);
+        client.setNetworkImage(album.cover_url, holder.image);
 
-        holder.image.setImageResource(tempImages.get(position % 7));
+//        holder.image.setImageResource(tempImages.get(position % 7));
 
         return row;
     }
 
 
     static class AlbumItemHolder {
-//        NetworkImageView image;
-        ImageView image;
+        NetworkImageView image;
+//        ImageView image;
         TextView title;
         TextView time;
     }

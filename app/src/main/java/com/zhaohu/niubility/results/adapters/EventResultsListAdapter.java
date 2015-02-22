@@ -1,4 +1,4 @@
-package com.zhaohu.niubility.results;
+package com.zhaohu.niubility.results.adapters;
 
 import android.app.Activity;
 import android.content.Context;
@@ -6,16 +6,15 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
-import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.android.volley.toolbox.NetworkImageView;
 import com.zhaohu.niubility.R;
-import com.zhaohu.niubility.client.ZhaoHuClient;
-import com.zhaohu.niubility.fragments.EventsFragment;
-import com.zhaohu.niubility.fragments.HotEventsFragment;
+import com.zhaohu.niubility.client.clients.ZhaoHuClient;
+import com.zhaohu.niubility.types.EventsType;
+import com.zhaohu.niubility.results.items.EventItem;
 
-import java.util.Enumeration;
+import java.util.IllegalFormatException;
 import java.util.List;
 
 import org.apache.commons.lang.StringEscapeUtils;
@@ -28,8 +27,8 @@ public class EventResultsListAdapter extends BaseAdapter{
     LayoutInflater mInflater;
     List<EventItem> events;
 
-    EventsFragment mType;
-    public EventResultsListAdapter(Context context, EventsFragment type) {
+    EventsType mType;
+    public EventResultsListAdapter(Context context, EventsType type) {
         this.context = context;
         this.mType = type;
         mInflater = ((Activity)context).getLayoutInflater();
@@ -61,10 +60,12 @@ public class EventResultsListAdapter extends BaseAdapter{
 
         if(row == null)
         {
-            if(mType == EventsFragment.HOME_FRAGMENT) {
+            if(mType == EventsType.HOME_EVENTS) {
                 row = mInflater.inflate(R.layout.results_item_layout, parent, false);
-            } else {
+            } else if(mType == EventsType.HOT_EVENTS) {
                 row = mInflater.inflate(R.layout.hot_item_layout, parent, false);
+            } else {
+
             }
 
             holder = new EventItemHolder();

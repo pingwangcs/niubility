@@ -6,16 +6,14 @@ import android.os.Bundle;
 import android.support.v4.app.NavUtils;
 import android.support.v4.app.TaskStackBuilder;
 import android.view.MenuItem;
-import android.webkit.CookieManager;
-import android.webkit.CookieSyncManager;
-import android.webkit.WebView;
 import android.widget.GridView;
 
 import com.zhaohu.niubility.R;
-import com.zhaohu.niubility.client.PhotoWallListener;
-import com.zhaohu.niubility.client.ZhaoHuClient;
-import com.zhaohu.niubility.results.PhotoItem;
-import com.zhaohu.niubility.results.PhotoWallAdapter;
+import com.zhaohu.niubility.client.clients.ZhaoHuClient;
+import com.zhaohu.niubility.client.listeners.ResultsListener;
+import com.zhaohu.niubility.results.items.PhotoItem;
+import com.zhaohu.niubility.results.adapters.PhotoWallAdapter;
+import com.zhaohu.niubility.types.EventsType;
 
 import java.util.List;
 
@@ -24,6 +22,8 @@ import java.util.List;
  */
 public class PhotoWallActivity extends Activity {
     private String url;
+    private GridView photoGridView;
+    private PhotoWallAdapter adapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -32,22 +32,13 @@ public class PhotoWallActivity extends Activity {
         setContentView(R.layout.photo_wall_layout);
         url = getIntent().getStringExtra("URL");
 
-        final GridView photoGridView = (GridView) findViewById(R.id.photo_wall);
+        photoGridView = (GridView) findViewById(R.id.photo_wall);
 
-        final PhotoWallAdapter adapter = new PhotoWallAdapter(this);
+        adapter = new PhotoWallAdapter(this);
 
         ZhaoHuClient client = ZhaoHuClient.getInstance(this);
 
-        client.addPhotoWallListener(new PhotoWallListener() {
-            @Override
-            public void update(List<PhotoItem> results) {
-                adapter.setData(results);
-                photoGridView.setAdapter(adapter);
-                adapter.notifyDataSetChanged();
-            }
-        });
-
-        client.fetchPhotoWall(url);
+        client.fetchResult(url, new PhotoWallResultsResponseListener());
 
     }
 
@@ -67,5 +58,14 @@ public class PhotoWallActivity extends Activity {
                 return true;
         }
         return true;
+    }
+
+    private class PhotoWallResultsResponseListener implements ResultsListener<PhotoItem> {
+        @Override
+        public void update(List<PhotoItem> results) {
+            adapter.setData(results);
+            photoGridView.setAdapter(adapter);
+            adapter.notifyDataSetChanged();
+        }
     }
 }

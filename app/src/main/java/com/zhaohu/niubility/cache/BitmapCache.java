@@ -1,17 +1,10 @@
-package com.zhaohu.niubility.client;
+package com.zhaohu.niubility.cache;
 
 import android.content.Context;
-import android.content.pm.PackageInfo;
-import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
-import android.os.Environment;
 import android.support.v4.util.LruCache;
-import android.util.Log;
 
 import com.android.volley.toolbox.ImageLoader;
-
-import java.io.File;
-import java.io.IOException;
 
 /**
  * Created by wen on 1/16/15.

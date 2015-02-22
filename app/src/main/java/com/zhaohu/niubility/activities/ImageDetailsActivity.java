@@ -1,12 +1,7 @@
 package com.zhaohu.niubility.activities;
 
-import java.io.File;
-
 import android.app.Activity;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.os.Bundle;
-import android.os.Environment;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v4.view.ViewPager.OnPageChangeListener;
@@ -17,7 +12,7 @@ import android.view.Window;
 import android.widget.TextView;
 
 import com.zhaohu.niubility.R;
-import com.zhaohu.niubility.client.ZhaoHuClient;
+import com.zhaohu.niubility.client.clients.ZhaoHuClient;
 import com.zhaohu.niubility.views.ZoomImageView;
 
 /**
@@ -97,26 +92,6 @@ public class ImageDetailsActivity extends Activity implements
 			container.removeView(view);
 		}
 
-	}
-
-	/**
-	 * 获取图片的本地存储路径。
-	 *
-	 * @param imageUrl
-	 *            图片的URL地址。
-	 * @return 图片的本地存储路径。
-	 */
-	private String getImagePath(String imageUrl) {
-		int lastSlashIndex = imageUrl.lastIndexOf("/");
-		String imageName = imageUrl.substring(lastSlashIndex + 1);
-		String imageDir = Environment.getExternalStorageDirectory().getPath()
-				+ "/PhotoWallFalls/";
-		File file = new File(imageDir);
-		if (!file.exists()) {
-			file.mkdirs();
-		}
-		String imagePath = imageDir + imageName;
-		return imagePath;
 	}
 
 	@Override

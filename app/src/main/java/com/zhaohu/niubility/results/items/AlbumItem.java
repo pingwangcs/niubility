@@ -1,4 +1,4 @@
-package com.zhaohu.niubility.results;
+package com.zhaohu.niubility.results.items;
 
 import org.json.JSONException;
 import org.json.JSONObject;

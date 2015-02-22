@@ -12,21 +12,19 @@ import android.widget.ListView;
 
 import com.zhaohu.niubility.R;
 import com.zhaohu.niubility.activities.PhotoWallActivity;
-import com.zhaohu.niubility.activities.WebViewActivity;
-import com.zhaohu.niubility.client.AlbumListener;
-import com.zhaohu.niubility.client.HotResultsListener;
-import com.zhaohu.niubility.client.ZhaoHuClient;
-import com.zhaohu.niubility.results.AlbumAdapter;
-import com.zhaohu.niubility.results.AlbumItem;
-import com.zhaohu.niubility.results.EventItem;
-import com.zhaohu.niubility.results.EventResultsListAdapter;
+import com.zhaohu.niubility.client.clients.ZhaoHuClient;
+import com.zhaohu.niubility.client.listeners.ResultsListener;
+import com.zhaohu.niubility.results.adapters.AlbumAdapter;
+import com.zhaohu.niubility.results.items.AlbumItem;
+import com.zhaohu.niubility.types.EventsType;
 
 import java.util.List;
 
 
 public class AlbumFragment extends Fragment{
     private Context mContext;
-
+    private ListView resultsListView;
+    private AlbumAdapter adapter;
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -34,34 +32,36 @@ public class AlbumFragment extends Fragment{
         mContext = container.getContext();
         View view = inflater.inflate(R.layout.album_layout, container, false);
 
-        final ListView resultsListView = (ListView) view.findViewById(R.id.album_list);
+        resultsListView = (ListView) view.findViewById(R.id.album_list);
 
-        final AlbumAdapter adapter = new AlbumAdapter(mContext);
-
+        adapter = new AlbumAdapter(mContext);
 
         ZhaoHuClient client = ZhaoHuClient.getInstance(mContext);
 
-        client.addAlbumListener(new AlbumListener() {
-            @Override
-            public void update(List<AlbumItem> results) {
-                adapter.setData(results);
-                resultsListView.setAdapter(adapter);
-                adapter.notifyDataSetChanged();
-            }
-        });
+        client.fetchResult(EventsType.ALBUM_EVENTS, new AlbumResultsResponseListener());
 
-        client.fetchAlbums();
+        resultsListView.setOnItemClickListener(new AlbumResultsOnItemClickListener());
 
-        resultsListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                String url = adapter.getItem(position).url;
-
-                Intent intent = new Intent(mContext, PhotoWallActivity.class);
-                intent.putExtra("URL", url);
-                startActivity(intent);
-            }
-        });
         return view;
+    }
+
+    private class AlbumResultsResponseListener implements ResultsListener<AlbumItem> {
+        @Override
+        public void update(List<AlbumItem> results) {
+            adapter.setData(results);
+            resultsListView.setAdapter(adapter);
+            adapter.notifyDataSetChanged();
+        }
+    }
+
+    private class AlbumResultsOnItemClickListener implements AdapterView.OnItemClickListener {
+        @Override
+        public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+            String url = adapter.getItem(position).url;
+
+            Intent intent = new Intent(mContext, PhotoWallActivity.class);
+            intent.putExtra("URL", url);
+            startActivity(intent);
+        }
     }
 }

@@ -12,10 +12,11 @@ import android.widget.ListView;
 
 import com.zhaohu.niubility.R;
 import com.zhaohu.niubility.activities.WebViewActivity;
-import com.zhaohu.niubility.client.HotResultsListener;
-import com.zhaohu.niubility.client.ZhaoHuClient;
-import com.zhaohu.niubility.results.EventItem;
-import com.zhaohu.niubility.results.EventResultsListAdapter;
+import com.zhaohu.niubility.client.clients.ZhaoHuClient;
+import com.zhaohu.niubility.client.listeners.ResultsListener;
+import com.zhaohu.niubility.results.items.EventItem;
+import com.zhaohu.niubility.results.adapters.EventResultsListAdapter;
+import com.zhaohu.niubility.types.EventsType;
 
 import java.util.List;
 
@@ -24,6 +25,8 @@ import java.util.List;
  */
 public class HotEventsFragment extends Fragment{
     private Context mContext;
+    private ListView resultsListView;
+    private EventResultsListAdapter adapter;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -32,35 +35,35 @@ public class HotEventsFragment extends Fragment{
         mContext = container.getContext();
         View view = inflater.inflate(R.layout.hot_page_layout, container, false);
 
-        final ListView resultsListView = (ListView) view.findViewById(R.id.results_list);
+        resultsListView = (ListView) view.findViewById(R.id.results_list);
 
-        final EventResultsListAdapter adapter = new EventResultsListAdapter(mContext, EventsFragment.HOT_EVENTS_FRAGMENT);
+        adapter = new EventResultsListAdapter(mContext, EventsType.HOT_EVENTS);
 
         ZhaoHuClient client = ZhaoHuClient.getInstance(mContext);
 
-        client.addHotResultsListener(new HotResultsListener() {
-            @Override
-            public void update(List<EventItem> results) {
-                adapter.setData(results);
-                resultsListView.setAdapter(adapter);
-                adapter.notifyDataSetChanged();
-            }
-        });
+        client.fetchResult(EventsType.HOT_EVENTS, new HotResultsResponseListener());
 
-        client.fetchHotResults();
-
-        resultsListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                String url = adapter.getItem(position).webViewUrl;
-
-                Intent intent = new Intent(mContext, WebViewActivity.class);
-                intent.putExtra("URL", url);
-                startActivity(intent);
-
-
-            }
-        });
+        resultsListView.setOnItemClickListener(new HotResultsOnItemClickListener());
         return view;
+    }
+
+    private class HotResultsResponseListener implements ResultsListener<EventItem> {
+        @Override
+        public void update(List<EventItem> results) {
+            adapter.setData(results);
+            resultsListView.setAdapter(adapter);
+            adapter.notifyDataSetChanged();
+        }
+    }
+
+    private class HotResultsOnItemClickListener implements AdapterView.OnItemClickListener {
+        @Override
+        public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+            String url = adapter.getItem(position).webViewUrl;
+
+            Intent intent = new Intent(mContext, WebViewActivity.class);
+            intent.putExtra("URL", url);
+            startActivity(intent);
+        }
     }
 }
