@@ -11,8 +11,8 @@ import android.view.ViewGroup;
 import android.widget.AbsListView;
 import android.widget.AdapterView;
 import android.widget.ListView;
+import android.widget.Toast;
 
-import com.android.volley.toolbox.JsonObjectRequest;
 import com.zhaohu.niubility.R;
 import com.zhaohu.niubility.activities.WebViewActivity;
 import com.zhaohu.niubility.client.clients.ZhaoHuClient;
@@ -27,15 +27,26 @@ import java.util.List;
  * Created by wen on 1/11/15.
  */
 public class HomeFragment extends Fragment{
+    private final static EventsType EVENT_TYPE = EventsType.HOME_EVENTS;
+
     private Context mContext;
     private ListView mResultsListView;
     private EventResultsListAdapter mAdapter;
 
+    private int visibleFirstIndex = 0;
+    private int visibleFirstOffset = 90;
+
     private int visibleLastIndex = 0;   //最后的可视项索引
     private int visibleItemCount;       // 当前窗口可见项总数
 
-    private View mLoadingSpinner;
-    private View mLoadMoreSpinner;
+    private View mMainLoadingSpinner;
+    private View mBottomLoadMoreSpinner;
+
+    private View mFootView;
+
+    private ZhaoHuClient client;
+
+    private boolean hasMoreResults = false;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -44,33 +55,46 @@ public class HomeFragment extends Fragment{
         mContext = container.getContext();
 
         View homeView = inflater.inflate(R.layout.home_page_layout, container, false);
-        mLoadingSpinner = homeView.findViewById(R.id.spinner);
-        mLoadingSpinner.setVisibility(View.VISIBLE);
+        mMainLoadingSpinner = homeView.findViewById(R.id.spinner);
+        mMainLoadingSpinner.setVisibility(View.VISIBLE);
 
-        View footerView = inflater.inflate(R.layout.spinner_layout, null);
-        mLoadMoreSpinner = footerView.findViewById(R.id.spinner);
-        mLoadMoreSpinner.setVisibility(View.VISIBLE);
+        mFootView = inflater.inflate(R.layout.spinner_layout, null);
+        mBottomLoadMoreSpinner = mFootView.findViewById(R.id.spinner);
+        mBottomLoadMoreSpinner.setVisibility(View.VISIBLE);
 
         mResultsListView = (ListView) homeView.findViewById(R.id.results_list);
-        mAdapter = new EventResultsListAdapter(mContext, EventsType.HOME_EVENTS);
+        mAdapter = new EventResultsListAdapter(mContext, EVENT_TYPE);
 
         mResultsListView.setOnItemClickListener(new HomeResultsOnItemClickListener());
         mResultsListView.setOnScrollListener(new HomeResultsOnScrollListener());
-        mResultsListView.addFooterView(footerView);
+        mResultsListView.addFooterView(mFootView);
 
-        ZhaoHuClient client = ZhaoHuClient.getInstance(mContext);
-        client.fetchResult(EventsType.HOME_EVENTS, new HomeResultsResponseListener());
-
+        client = ZhaoHuClient.getInstance(mContext);
+        client.fetchResult(EVENT_TYPE, new HomeResultsResponseListener());
         return homeView;
     }
 
     private class HomeResultsResponseListener implements ResultsListener<EventItem> {
         @Override
         public void update(List<EventItem> results) {
+
+            int index = mResultsListView.getFirstVisiblePosition();
+            View v = mResultsListView.getChildAt(0);
+            int top = (v == null) ? 0 : (v.getTop() - mResultsListView.getPaddingTop());
+
             mAdapter.setData(results);
             mResultsListView.setAdapter(mAdapter);
             mAdapter.notifyDataSetChanged();
-            mLoadingSpinner.setVisibility(View.GONE);
+
+            mResultsListView.setSelectionFromTop(index, top);
+
+            mMainLoadingSpinner.setVisibility(View.GONE);
+        }
+
+        @Override
+        public void whenNoMoreResults() {
+            mResultsListView.removeFooterView(mFootView);
+            hasMoreResults = false;
         }
     }
 
@@ -88,19 +112,26 @@ public class HomeFragment extends Fragment{
     private class HomeResultsOnScrollListener implements AbsListView.OnScrollListener {
         @Override
         public void onScroll(AbsListView view, int firstVisibleItem, int visibleCount, int totalItemCount) {
+            visibleFirstIndex = firstVisibleItem;
             visibleItemCount = visibleCount;
             visibleLastIndex = firstVisibleItem + visibleItemCount - 1;
-            Log.w("wztw", "onScroll: visibleItemCount:"+visibleItemCount+" visibleLastIndex:"+visibleLastIndex);
         }
 
         @Override
         public void onScrollStateChanged(AbsListView view, int scrollState) {
             int itemsLastIndex = mAdapter.getCount() - 1;    //数据集最后一项的索引
             int lastIndex = itemsLastIndex + 1;             //加上底部的loadMoreView项
-            Log.w("wztw", "onScrollStateChanged:lastIndex:"+lastIndex);
-            if (scrollState == AbsListView.OnScrollListener.SCROLL_STATE_IDLE && visibleLastIndex == lastIndex) {
+            if (scrollState == AbsListView.OnScrollListener.SCROLL_STATE_IDLE && visibleLastIndex == lastIndex - 1) {
                 //如果是自动加载,可以在这里放置异步加载数据的代码
-                Log.w("wztw", "should update listview here");
+                Log.w("wztw", "visibleLastIndex:"+visibleLastIndex+" visibleItemCount:"+visibleItemCount+" visibleFirstIndex:"+visibleFirstIndex);
+                if(hasMoreResults) {
+                    Log.w("wztw", "has more will load");
+                    client.loadMore(EVENT_TYPE, mAdapter.getCount());
+                } else if (mResultsListView.getChildAt(mResultsListView.getChildCount() - 1).getBottom() <= mResultsListView.getHeight()) {
+                    Log.w("wztw", "Bottom");
+                    Toast.makeText(mContext, "数据全部加载完成，没有更多数据！", Toast.LENGTH_SHORT).show();
+                }
+
             }
         }
     }

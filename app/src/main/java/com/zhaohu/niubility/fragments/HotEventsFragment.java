@@ -54,6 +54,11 @@ public class HotEventsFragment extends Fragment{
             resultsListView.setAdapter(adapter);
             adapter.notifyDataSetChanged();
         }
+
+        @Override
+        public void whenNoMoreResults() {
+
+        }
     }
 
     private class HotResultsOnItemClickListener implements AdapterView.OnItemClickListener {

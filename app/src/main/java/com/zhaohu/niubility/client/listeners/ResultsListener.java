@@ -7,4 +7,6 @@ import java.util.List;
  */
 public interface ResultsListener<T> {
     public void update(List<T> results);
+
+    public void whenNoMoreResults();
 }

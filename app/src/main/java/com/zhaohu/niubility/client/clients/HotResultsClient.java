@@ -66,4 +66,10 @@ public class HotResultsClient implements ResultsClient {
     public void addListener(ResultsListener listener) {
         mHotResultsListener = listener;
     }
+
+    @Override
+    public JsonObjectRequest getLoadMoreRequest(int offset) {
+        return null;
+    }
+
 }

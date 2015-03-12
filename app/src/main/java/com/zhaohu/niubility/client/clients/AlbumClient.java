@@ -67,4 +67,9 @@ public class AlbumClient implements ResultsClient {
         mAlbumListener = listener;
     }
 
+    @Override
+    public JsonObjectRequest getLoadMoreRequest(int offset) {
+        return null;
+    }
+
 }

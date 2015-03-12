@@ -52,6 +52,11 @@ public class AlbumFragment extends Fragment{
             resultsListView.setAdapter(adapter);
             adapter.notifyDataSetChanged();
         }
+
+        @Override
+        public void whenNoMoreResults() {
+
+        }
     }
 
     private class AlbumResultsOnItemClickListener implements AdapterView.OnItemClickListener {

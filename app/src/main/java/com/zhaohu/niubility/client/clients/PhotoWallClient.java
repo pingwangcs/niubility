@@ -70,4 +70,10 @@ public class PhotoWallClient implements ResultsClient {
     public void addListener(ResultsListener listener) {
         mPhotoWallListener = listener;
     }
+
+    @Override
+    public JsonObjectRequest getLoadMoreRequest(int offset) {
+        return null;
+    }
+
 }

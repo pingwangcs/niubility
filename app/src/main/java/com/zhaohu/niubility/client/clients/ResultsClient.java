@@ -10,6 +10,10 @@ import java.util.List;
  */
 public interface ResultsClient {
     public String getUrl();
+
     public JsonObjectRequest getFetchRequest();
+
     public void addListener(ResultsListener listener);
+
+    public JsonObjectRequest getLoadMoreRequest(int offset);
 }

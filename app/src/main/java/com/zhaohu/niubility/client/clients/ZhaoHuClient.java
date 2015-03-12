@@ -31,6 +31,7 @@ public class ZhaoHuClient {
 
     private ResultsClient resultsClient;
 
+
     public ZhaoHuClient(Context context) {
         mContext = context;
         mQueue = Volley.newRequestQueue(mContext);
@@ -44,21 +45,15 @@ public class ZhaoHuClient {
     }
 
     public void fetchResult(EventsType type, ResultsListener listener) {
-        JsonObjectRequest request;
+        ResultsClient client = getSpecifcClient(type);
+        client.addListener(listener);
+        JsonObjectRequest request = client.getFetchRequest();
+        mQueue.add(request);
+    }
 
-        switch (type) {
-            case HOME_EVENTS:
-                resultsClient = new HomeResultsClient();
-                break;
-            case HOT_EVENTS:
-                resultsClient = new HotResultsClient();
-                break;
-            case ALBUM_EVENTS:
-                resultsClient = new AlbumClient();
-                break;
-        }
-        resultsClient.addListener(listener);
-        request = resultsClient.getFetchRequest();
+    public void loadMore(EventsType type, int offset) {
+        ResultsClient client = getSpecifcClient(type);
+        JsonObjectRequest request = client.getLoadMoreRequest(offset);
         mQueue.add(request);
     }
 
@@ -124,4 +119,23 @@ public class ZhaoHuClient {
 
         imageLoader.get(url, listener);
     }
+
+    private ResultsClient getSpecifcClient(EventsType type) {
+        ResultsClient client;
+        switch (type) {
+            case HOME_EVENTS:
+                client = HomeResultsClient.getInstance();
+                break;
+            case HOT_EVENTS:
+                client = new HotResultsClient();
+                break;
+            case ALBUM_EVENTS:
+                client = new AlbumClient();
+                break;
+            default:
+                client = null;
+        }
+        return client;
+    }
+
 }

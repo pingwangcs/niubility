@@ -67,5 +67,10 @@ public class PhotoWallActivity extends Activity {
             photoGridView.setAdapter(adapter);
             adapter.notifyDataSetChanged();
         }
+
+        @Override
+        public void whenNoMoreResults() {
+
+        }
     }
 }

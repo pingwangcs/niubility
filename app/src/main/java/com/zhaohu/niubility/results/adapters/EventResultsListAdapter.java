@@ -14,6 +14,7 @@ import com.zhaohu.niubility.client.clients.ZhaoHuClient;
 import com.zhaohu.niubility.types.EventsType;
 import com.zhaohu.niubility.results.items.EventItem;
 
+import java.util.ArrayList;
 import java.util.IllegalFormatException;
 import java.util.List;
 
@@ -32,6 +33,7 @@ public class EventResultsListAdapter extends BaseAdapter{
         this.context = context;
         this.mType = type;
         mInflater = ((Activity)context).getLayoutInflater();
+        events = new ArrayList<EventItem>();
     }
 
     @Override
@@ -50,7 +52,7 @@ public class EventResultsListAdapter extends BaseAdapter{
     }
 
     public void setData(List<EventItem> events) {
-        this.events = events;
+        this.events.addAll(events);
     }
 
     @Override
@@ -81,6 +83,7 @@ public class EventResultsListAdapter extends BaseAdapter{
         else
         {
             holder = (EventItemHolder)row.getTag();
+            holder.image.setImageBitmap(null);
         }
 
         EventItem event = events.get(position);
