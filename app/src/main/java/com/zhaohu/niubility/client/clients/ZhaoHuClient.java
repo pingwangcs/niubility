@@ -132,6 +132,9 @@ public class ZhaoHuClient {
             case ALBUM_EVENTS:
                 client = new AlbumClient();
                 break;
+            case PHOTO_WALL_EVENTS:
+                client = PhotoWallClient.getInstance();
+                break;
             default:
                 client = null;
         }

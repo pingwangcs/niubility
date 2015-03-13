@@ -69,6 +69,9 @@ public class ImageDetailsActivity extends Activity implements
 			ZoomImageView zoomImageView = (ZoomImageView) view
 					.findViewById(R.id.zoom_image_view);
 
+            View spinner = view.findViewById(R.id.spinner);
+            spinner.setVisibility(View.VISIBLE);
+
             ZhaoHuClient client = ZhaoHuClient.getInstance(ImageDetailsActivity.this);
             client.loadImage(imageUrls[position], zoomImageView);
 

@@ -21,6 +21,20 @@ public class PhotoWallClient implements ResultsClient {
     private String url;
     private ResultsListener mPhotoWallListener;
 
+    private static PhotoWallClient mInstance = null;
+
+    private PhotoWallClient() {
+
+    }
+
+    public static PhotoWallClient getInstance() {
+        if(mInstance == null) {
+            mInstance = new PhotoWallClient();
+        }
+        return mInstance;
+    }
+
+
     public PhotoWallClient(String url) {
         this.url = url;
     }

@@ -35,14 +35,6 @@ public class AlbumAdapter extends BaseAdapter {
         this.context = context;
         mInflater = ((Activity)context).getLayoutInflater();
 
-        tempImages.add(R.drawable.image1);
-        tempImages.add(R.drawable.image2);
-        tempImages.add(R.drawable.image3);
-        tempImages.add(R.drawable.image4);
-        tempImages.add(R.drawable.image5);
-        tempImages.add(R.drawable.image6);
-        tempImages.add(R.drawable.image7);
-
     }
 
     @Override
@@ -96,15 +88,12 @@ public class AlbumAdapter extends BaseAdapter {
         ZhaoHuClient client = ZhaoHuClient.getInstance(context);
         client.setNetworkImage(album.cover_url, holder.image);
 
-//        holder.image.setImageResource(tempImages.get(position % 7));
-
         return row;
     }
 
 
     static class AlbumItemHolder {
         NetworkImageView image;
-//        ImageView image;
         TextView title;
         TextView time;
     }

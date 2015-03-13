@@ -34,7 +34,6 @@ public class HomeFragment extends Fragment{
     private EventResultsListAdapter mAdapter;
 
     private int visibleFirstIndex = 0;
-    private int visibleFirstOffset = 90;
 
     private int visibleLastIndex = 0;   //最后的可视项索引
     private int visibleItemCount;       // 当前窗口可见项总数
@@ -123,12 +122,9 @@ public class HomeFragment extends Fragment{
             int lastIndex = itemsLastIndex + 1;             //加上底部的loadMoreView项
             if (scrollState == AbsListView.OnScrollListener.SCROLL_STATE_IDLE && visibleLastIndex == lastIndex - 1) {
                 //如果是自动加载,可以在这里放置异步加载数据的代码
-                Log.w("wztw", "visibleLastIndex:"+visibleLastIndex+" visibleItemCount:"+visibleItemCount+" visibleFirstIndex:"+visibleFirstIndex);
                 if(hasMoreResults) {
-                    Log.w("wztw", "has more will load");
                     client.loadMore(EVENT_TYPE, mAdapter.getCount());
                 } else if (mResultsListView.getChildAt(mResultsListView.getChildCount() - 1).getBottom() <= mResultsListView.getHeight()) {
-                    Log.w("wztw", "Bottom");
                     Toast.makeText(mContext, "数据全部加载完成，没有更多数据！", Toast.LENGTH_SHORT).show();
                 }
 
