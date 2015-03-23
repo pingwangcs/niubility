@@ -9,6 +9,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.zhaohu.niubility.R;
@@ -46,6 +47,7 @@ public class ImageDetailsActivity extends Activity implements
 
 		pageText = (TextView) findViewById(R.id.page_text);
 		viewPager = (ViewPager) findViewById(R.id.view_pager);
+        viewPager.setOffscreenPageLimit(1);
 		ViewPagerAdapter adapter = new ViewPagerAdapter();
 		viewPager.setAdapter(adapter);
 		viewPager.setCurrentItem(imagePosition);
@@ -69,11 +71,11 @@ public class ImageDetailsActivity extends Activity implements
 			ZoomImageView zoomImageView = (ZoomImageView) view
 					.findViewById(R.id.zoom_image_view);
 
-            View spinner = view.findViewById(R.id.spinner);
-            spinner.setVisibility(View.VISIBLE);
+//            ProgressBar spinner = (ProgressBar) view.findViewById(R.id.progressBar1);
+//            spinner.setVisibility(View.VISIBLE);
 
             ZhaoHuClient client = ZhaoHuClient.getInstance(ImageDetailsActivity.this);
-            client.loadImage(imageUrls[position], zoomImageView);
+            client.loadImage(imageUrls[position], zoomImageView, null);
 
 			container.addView(view);
 			return view;

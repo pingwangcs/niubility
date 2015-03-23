@@ -34,7 +34,7 @@ public class PhotoWallActivity extends Activity {
     private int visibleLastIndex = 0;   //最后的可视项索引
     private int visibleItemCount;       // 当前窗口可见项总数
 
-    private boolean hasMoreResults = false;
+    private Boolean hasMoreResults = true;
 
     private final static EventsType EVENT_TYPE = EventsType.PHOTO_WALL_EVENTS;
 
@@ -46,7 +46,7 @@ public class PhotoWallActivity extends Activity {
         url = getIntent().getStringExtra("URL");
 
         photoGridView = (GridView) findViewById(R.id.photo_wall);
-//        photoGridView.setOnScrollListener(new PhotoWallResultsOnScrollListener());
+        photoGridView.setOnScrollListener(new PhotoWallResultsOnScrollListener());
 
         adapter = new PhotoWallAdapter(this);
 
@@ -79,14 +79,25 @@ public class PhotoWallActivity extends Activity {
     private class PhotoWallResultsResponseListener implements ResultsListener<PhotoItem> {
         @Override
         public void update(List<PhotoItem> results) {
+
             adapter.setData(results);
             photoGridView.setAdapter(adapter);
             adapter.notifyDataSetChanged();
+
+            synchronized (hasMoreResults) {
+                if (hasMoreResults) {
+                    client.loadMore(EVENT_TYPE, adapter.getCount());
+                }
+            }
+
+
         }
 
         @Override
         public void whenNoMoreResults() {
-
+            synchronized (hasMoreResults) {
+                hasMoreResults = false;
+            }
         }
     }
 
@@ -107,7 +118,7 @@ public class PhotoWallActivity extends Activity {
                 Log.w("wztw", "visibleLastIndex:" + visibleLastIndex + " visibleItemCount:" + visibleItemCount + " visibleFirstIndex:" + visibleFirstIndex);
                 if(hasMoreResults) {
                     Log.w("wztw", "has more will load");
-                    client.loadMore(EVENT_TYPE, adapter.getCount());
+
                 } else if (photoGridView.getChildAt(photoGridView.getChildCount() - 1).getBottom() <= photoGridView.getHeight()) {
                     Log.w("wztw", "Bottom");
                     Toast.makeText(PhotoWallActivity.this, "数据全部加载完成，没有更多数据！", Toast.LENGTH_SHORT).show();

@@ -14,6 +14,7 @@ import com.zhaohu.niubility.activities.ImageDetailsActivity;
 import com.zhaohu.niubility.client.clients.ZhaoHuClient;
 import com.zhaohu.niubility.results.items.PhotoItem;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -27,6 +28,7 @@ public class PhotoWallAdapter extends BaseAdapter{
     public PhotoWallAdapter(Context context) {
         this.context = context;
         mInflater = ((Activity)context).getLayoutInflater();
+        events = new ArrayList<PhotoItem>();
     }
 
     @Override
@@ -45,7 +47,7 @@ public class PhotoWallAdapter extends BaseAdapter{
     }
 
     public void setData(List<PhotoItem> events) {
-        this.events = events;
+        this.events.addAll(events);
     }
 
     @Override

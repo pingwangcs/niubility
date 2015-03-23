@@ -18,24 +18,24 @@ import java.util.ArrayList;
  * Created by wen on 2/22/15.
  */
 public class PhotoWallClient implements ResultsClient {
+
+    private static final String PARAM_OFFSET = "&offset=";
     private String url;
     private ResultsListener mPhotoWallListener;
 
     private static PhotoWallClient mInstance = null;
 
     private PhotoWallClient() {
-
     }
 
-    public static PhotoWallClient getInstance() {
-        if(mInstance == null) {
-            mInstance = new PhotoWallClient();
+    public static PhotoWallClient getInstance(String url) {
+        if(mInstance == null || url != null ) {
+            mInstance = new PhotoWallClient(url);
         }
         return mInstance;
     }
 
-
-    public PhotoWallClient(String url) {
+    private PhotoWallClient(String url) {
         this.url = url;
     }
 
@@ -46,9 +46,14 @@ public class PhotoWallClient implements ResultsClient {
 
     @Override
     public JsonObjectRequest getFetchRequest() {
-        final ArrayList<PhotoItem> results = new ArrayList<PhotoItem>();
+        return getLoadMoreRequest(0);
+    }
 
-        JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(url, null,
+    @Override
+    public JsonObjectRequest getLoadMoreRequest(int offset) {
+        final ArrayList<PhotoItem> results = new ArrayList<PhotoItem>();
+        Log.w("wztw", "more request:"+url+PARAM_OFFSET+offset);
+        JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(url+PARAM_OFFSET+offset, null,
                 new Response.Listener<JSONObject>() {
                     @Override
                     public void onResponse(JSONObject response) {
@@ -56,6 +61,13 @@ public class PhotoWallClient implements ResultsClient {
                         try {
                             JSONObject result = response.getJSONObject("result");
                             JSONArray resultsEntitiesJsonArray = result.getJSONArray("entities");
+
+                            boolean hasMore = result.getString("has_more").equals("true");
+                            if(!hasMore){
+                                mPhotoWallListener.whenNoMoreResults();
+                            }
+
+
                             for (int i=0; i<resultsEntitiesJsonArray.length(); i++) {
                                 JSONObject object = (JSONObject) resultsEntitiesJsonArray.get(i);
                                 String title = object.getString("title");
@@ -78,16 +90,12 @@ public class PhotoWallClient implements ResultsClient {
             }
         });
         return jsonObjectRequest;
+
     }
 
     @Override
     public void addListener(ResultsListener listener) {
         mPhotoWallListener = listener;
-    }
-
-    @Override
-    public JsonObjectRequest getLoadMoreRequest(int offset) {
-        return null;
     }
 
 }

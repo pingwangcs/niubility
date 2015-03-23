@@ -73,8 +73,6 @@ public class WebViewActivity extends Activity {
 //                    setTitle(R.string.app_name);
                     progressBar.setVisibility(View.GONE);
                 }
-
-                Log.w("wztw", "progress:" + progress);
             }
         });
 

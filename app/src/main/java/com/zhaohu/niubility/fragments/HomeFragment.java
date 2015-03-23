@@ -45,7 +45,7 @@ public class HomeFragment extends Fragment{
 
     private ZhaoHuClient client;
 
-    private boolean hasMoreResults = false;
+    private boolean hasMoreResults = true;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,

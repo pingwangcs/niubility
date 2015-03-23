@@ -3,7 +3,10 @@ package com.zhaohu.niubility.client.clients;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.util.Log;
+import android.view.View;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
@@ -59,7 +62,7 @@ public class ZhaoHuClient {
 
     public void fetchResult(String url, ResultsListener listener) {
         JsonObjectRequest request;
-        resultsClient = new PhotoWallClient(url);
+        resultsClient = PhotoWallClient.getInstance(url);
         resultsClient.addListener(listener);
         request = resultsClient.getFetchRequest();
         mQueue.add(request);
@@ -101,13 +104,20 @@ public class ZhaoHuClient {
         mQueue.add(imageRequest);
     }
 
-    public void loadImage(String url, final ZoomImageView zoomImageView) {
+    public void loadImage(String url, final ZoomImageView zoomImageView, final ProgressBar progressBar) {
+        Log.w("wztw", "loadImage:"+url);
         ImageLoader imageLoader = new ImageLoader(mQueue, BitmapCache.getInstance(mContext));
+        if (progressBar != null) {
+            progressBar.setVisibility(View.VISIBLE);
+        }
 
         ImageLoader.ImageListener listener = new ImageLoader.ImageListener() {
             @Override
             public void onResponse(ImageLoader.ImageContainer response, boolean isImmediate) {
                 zoomImageView.setImageBitmap(response.getBitmap());
+                if (progressBar != null && isImmediate) {
+                    progressBar.setVisibility(View.GONE);
+                }
             }
 
             @Override
@@ -133,7 +143,7 @@ public class ZhaoHuClient {
                 client = new AlbumClient();
                 break;
             case PHOTO_WALL_EVENTS:
-                client = PhotoWallClient.getInstance();
+                client = PhotoWallClient.getInstance(null);
                 break;
             default:
                 client = null;
