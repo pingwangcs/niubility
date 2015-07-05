@@ -20,6 +20,8 @@ import java.util.ArrayList;
 public class PhotoWallClient implements ResultsClient {
 
     private static final String PARAM_OFFSET = "&offset=";
+    private static final String PARAM_BATCH = "&batch_size=";
+
     private String url;
     private ResultsListener mPhotoWallListener;
 
@@ -52,8 +54,9 @@ public class PhotoWallClient implements ResultsClient {
     @Override
     public JsonObjectRequest getLoadMoreRequest(int offset) {
         final ArrayList<PhotoItem> results = new ArrayList<PhotoItem>();
-        Log.w("wztw", "more request:"+url+PARAM_OFFSET+offset);
-        JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(url+PARAM_OFFSET+offset, null,
+        Log.w("wztw", "more request:"+url+PARAM_BATCH+Integer.MAX_VALUE);
+//        JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(url+PARAM_OFFSET+offset, null,
+        JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(url+PARAM_BATCH+Integer.MAX_VALUE, null,
                 new Response.Listener<JSONObject>() {
                     @Override
                     public void onResponse(JSONObject response) {

@@ -84,11 +84,11 @@ public class PhotoWallActivity extends Activity {
             photoGridView.setAdapter(adapter);
             adapter.notifyDataSetChanged();
 
-            synchronized (hasMoreResults) {
-                if (hasMoreResults) {
-                    client.loadMore(EVENT_TYPE, adapter.getCount());
-                }
-            }
+//            synchronized (hasMoreResults) {
+//                if (hasMoreResults) {
+//                    client.loadMore(EVENT_TYPE, adapter.getCount());
+//                }
+//            }
 
 
         }
@@ -121,7 +121,7 @@ public class PhotoWallActivity extends Activity {
 
                 } else if (photoGridView.getChildAt(photoGridView.getChildCount() - 1).getBottom() <= photoGridView.getHeight()) {
                     Log.w("wztw", "Bottom");
-                    Toast.makeText(PhotoWallActivity.this, "数据全部加载完成，没有更多数据！", Toast.LENGTH_SHORT).show();
+//                    Toast.makeText(PhotoWallActivity.this, "数据全部加载完成，没有更多数据！", Toast.LENGTH_SHORT).show();
                 }
 
             }

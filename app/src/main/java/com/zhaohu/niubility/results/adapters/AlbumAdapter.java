@@ -70,6 +70,8 @@ public class AlbumAdapter extends BaseAdapter {
 //            holder.image = (ImageView) row.findViewById(R.id.image);
             holder.title = (TextView)row.findViewById(R.id.title);
             holder.time = (TextView) row.findViewById(R.id.time);
+            holder.size = (TextView) row.findViewById(R.id.size);
+
 //            holder.startTime = (TextView)row.findViewById(R.id.start_time);
 //            holder.endTime = (TextView)row.findViewById(R.id.end_time);
 //            holder.address = (TextView)row.findViewById(R.id.address);
@@ -83,7 +85,8 @@ public class AlbumAdapter extends BaseAdapter {
 
         AlbumItem album = albums.get(position);
         holder.title.setText(album.title);
-//        holder.title.setText(StringEscapeUtils.unescapeHtml(event.title));
+        holder.time.setText(album.time);
+        holder.size.setText(album.size + " "+ (Integer.parseInt(album.size)>1 ? "Photos" : "Photo"));
 
         ZhaoHuClient client = ZhaoHuClient.getInstance(context);
         client.setNetworkImage(album.cover_url, holder.image);
@@ -96,6 +99,7 @@ public class AlbumAdapter extends BaseAdapter {
         NetworkImageView image;
         TextView title;
         TextView time;
+        TextView size;
     }
 }
 

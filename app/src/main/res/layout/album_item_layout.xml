@@ -29,7 +29,7 @@
                 android:id="@+id/album_type"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="AUTO ALBUM"
+                android:text="ALBUM"
                 android:textSize="10sp"
                 android:textStyle="bold"/>
 
@@ -37,7 +37,7 @@
                 android:id="@+id/album_info"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="7 VIEWS 12 COMMENTS"
+                android:text="By 51活动小组"
                 android:textSize="10sp"
                 android:textStyle="bold"/>
         </LinearLayout>
@@ -51,7 +51,6 @@
 
             <TextView
                 android:id="@+id/title"
-                android:text="Thanksgiving"
                 android:textSize="20sp"
                 android:textStyle="bold"
                 android:paddingBottom="60dp"
@@ -66,8 +65,8 @@
                 android:layout_height="wrap_content" />
 
             <TextView
-                android:id="@+id/counts"
-                android:text="98 Photos"
+                android:id="@+id/size"
+                android:text="38 Photos"
                 android:textSize="14sp"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content" />

@@ -53,6 +53,7 @@ public class HomeFragment extends Fragment{
 
         mContext = container.getContext();
 
+
         View homeView = inflater.inflate(R.layout.home_page_layout, container, false);
         mMainLoadingSpinner = homeView.findViewById(R.id.spinner);
         mMainLoadingSpinner.setVisibility(View.VISIBLE);
